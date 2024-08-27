@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: image-mutating-webhook
+webhooks:
+  - name: image-mutating-webhook
+    clientConfig:
+      service:
+        name: image-mutating-webhook
+        namespace: kube-system
+        path: /mutate
+        port: 443
+      caBundle: <base64-encoded-ca-cert>
+    rules:
+      - operations: ["CREATE", "UPDATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    timeoutSeconds: 10
+    failurePolicy: Ignore
+    matchPolicy: Equivalent
